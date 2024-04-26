@@ -1,0 +1,40 @@
+func solve(i, j, n int, grid [][]int, dp [][]int) int {
+    if j < 0 || j >= n {
+        return 1e9
+    }
+    if i == 0 {
+        return grid[0][j]
+    }
+    if dp[i][j] != math.MaxInt32 {
+        return dp[i][j]
+    }
+
+    temp := math.MaxInt32
+
+    for k := 0; k < n; k++ {
+        if k != j {
+            temp = min(temp, grid[i][j] + solve(i - 1, k, n, grid, dp))
+        }
+    }
+
+    dp[i][j] = temp
+    return temp
+}
+
+func minFallingPathSum(grid [][]int) int {
+    n, mini := len(grid), math.MaxInt32
+    dp := make([][]int, n)
+
+    for i := range dp {
+        dp[i] = make([]int, n)
+        for j := range dp[i] {
+            dp[i][j] = math.MaxInt32
+        }
+    }
+
+    for i := 0; i < n; i++ {
+        mini = min(mini, solve(n-1, i, n, grid, dp))
+    }
+
+    return mini
+}
